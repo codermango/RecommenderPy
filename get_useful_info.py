@@ -45,6 +45,13 @@ def get_tidy_ids(file_path):
         language = info['language']
         country = info['country']
 
+        mawid1 = info['mawid1']
+        mawid2 = info['mawid2']
+        mawid = list(set(mawid1).union(set(mawid2)))
+        #print mawid
+        if mawid:
+            continue
+
         country = __handle_country_link_for_ids_info(country)
         language = __handle_language_link_for_ids_info(language)
 
@@ -64,11 +71,6 @@ def get_tidy_ids(file_path):
             elif id == 'netflix_id':
                 del ids['netflix_id']
         #print ids
-
-        mawid1 = info['mawid1']
-        mawid2 = info['mawid2']
-        mawid = list(set(mawid1).union(set(mawid2)))
-        #print type(mawid1)
 
         info_dic = dict()
         info_dic['mawid'] = mawid
@@ -144,15 +146,19 @@ def get_tidy_tagdb(file_path):
 
         ids = movie['externalIds']
         for i in ids:
+            #print i
+            #count += 1
             for line in f_tidy_ids:
+                
                 movie_of_ids = json.loads(line)
                 ids_in_tidy_ids = movie_of_ids['ids']
+                info_in_tidy_ids = movie_of_ids['info']                
+
                 for j in ids_in_tidy_ids:
-                    if i == j and ids[i] == ids_in_tidy_ids[j]:
-                        print movie_of_ids
-                        #print i, ids[i], j, ids_in_tidy_ids[j]
-
-
+                    #print i, j
+                    count += 1
+                    if i == j and ids[i] == ids_in_tidy_ids[j]:                         
+                        mawid = info_in_tidy_ids['mawid']
 
         movie_dic = dict()
         movie_dic['mediaType'] = media_type
@@ -160,9 +166,12 @@ def get_tidy_tagdb(file_path):
         movie_dic['language'] = language
         movie_dic['genres'] = genres
         movie_dic['mawid'] = mawid
-        print movie_dic
+        
+        movie_json = json.dumps(movie_dic)
+        f_tidy_tagdb.write(movie_json + '\n')
 
-        break
+    f_tidy_tagdb.close()
+
     print count    
         
 
