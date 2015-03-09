@@ -49,7 +49,7 @@ def get_tidy_ids(file_path):
         mawid2 = info['mawid2']
         mawid = list(set(mawid1).union(set(mawid2)))
         #print mawid
-        if mawid:
+        if not mawid:
             continue
 
         country = __handle_country_link_for_ids_info(country)
@@ -74,6 +74,7 @@ def get_tidy_ids(file_path):
 
         info_dic = dict()
         info_dic['mawid'] = mawid
+        #print mawid
         info_dic['language'] = language
         info_dic['country'] = country
 
@@ -96,8 +97,6 @@ def __handle_language_for_tagdb(language):
     count = 0
     for item in language:
         language_list.append(item['name'])
-        
-
     return language_list
 
 def __handle_genres_for_tagdb(genres):
@@ -123,13 +122,11 @@ def __combine_ids(ids, f_tidy_ids):
 
 def get_tidy_tagdb(file_path):
     f_tagdb = open('!tagdb.json')
-    f_tidy_tagdb = open('tidy_tagdb.json', 'w')
-
-    f_tidy_ids = open('tidy_ids.json')
+    f_tidy_tagdb = open('tidy_tagdb.json', 'w') 
 
     count = 0
-    for line in f_tagdb:
-        movie = json.loads(line)
+    for line_of_f_tagdb in f_tagdb:
+        movie = json.loads(line_of_f_tagdb)
 
         media_type = movie['mediaType']
 
@@ -146,19 +143,23 @@ def get_tidy_tagdb(file_path):
 
         ids = movie['externalIds']
         for i in ids:
-            #print i
             #count += 1
-            for line in f_tidy_ids:
-                
-                movie_of_ids = json.loads(line)
+            f_tidy_ids = open('tidy_ids.json')            
+            for line_of_f_tidy_ids in f_tidy_ids:
+    
+                movie_of_ids = json.loads(line_of_f_tidy_ids) 
                 ids_in_tidy_ids = movie_of_ids['ids']
                 info_in_tidy_ids = movie_of_ids['info']                
 
                 for j in ids_in_tidy_ids:
                     #print i, j
                     count += 1
-                    if i == j and ids[i] == ids_in_tidy_ids[j]:                         
+                    if i == j and ids[i] == ids_in_tidy_ids[j]:   
+                        print 0                      
                         mawid = info_in_tidy_ids['mawid']
+                #print i
+            f_tidy_ids.close()
+            #print i  
 
         movie_dic = dict()
         movie_dic['mediaType'] = media_type
@@ -188,8 +189,29 @@ get_tidy_tagdb('tidy_tagdb.json')
 
 
 
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
