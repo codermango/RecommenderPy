@@ -105,17 +105,11 @@ def __handle_genres_for_tagdb(genres):
         genres_list.append(item['name'])
     return genres_list
 
-def __combine_ids(ids, f_tidy_ids):
+def __combine_ids_and_get_mawid(ids, f_tidy_ids):
     print ids
-    freebaseId_list = []
-    imdbId_list = []
-    wikipediaPageId_list = []
-    tmdbId_list = []
+    print 1 
 
-    # for k in ids:
-    #     if k == 'freebaseId':
-    #         for line in f_tidy_ids:
-    #             if line['ids']
+
 
 
 
@@ -142,23 +136,39 @@ def get_tidy_tagdb(file_path):
         mawid = []
 
         ids = movie['externalIds']
-        for i in ids:
-            #count += 1
-            f_tidy_ids = open('tidy_ids.json')            
-            for line_of_f_tidy_ids in f_tidy_ids:
-    
-                movie_of_ids = json.loads(line_of_f_tidy_ids) 
-                ids_in_tidy_ids = movie_of_ids['ids']
-                info_in_tidy_ids = movie_of_ids['info']                
 
-                for j in ids_in_tidy_ids:
-                    #print i, j
-                    count += 1
-                    if i == j and ids[i] == ids_in_tidy_ids[j]:   
-                        print 0                      
-                        mawid = info_in_tidy_ids['mawid']
-                #print i
-            f_tidy_ids.close()
+
+        #mawid = __combine_ids_and_get_mawid(ids, 'tidy_ids.json')
+
+        ids_tuple_list = ids.items()
+        #print ids_tuple_list
+
+        f_tidy_ids = open('tidy_ids.json')
+        for line_of_f_tidy_ids in f_tidy_ids:
+    
+            movie_of_ids = json.loads(line_of_f_tidy_ids) 
+            info_in_tidy_ids = movie_of_ids['info'] 
+            ids_in_tidy_ids_tuple_list = movie_of_ids['ids'].items()
+            #print ids_in_tidy_ids_tuple_list
+            tmp = [item for item in ids_tuple_list if item in ids_in_tidy_ids_tuple_list]
+            if tmp:
+                mawid = info_in_tidy_ids['mawid']
+
+        # for i in ids:
+        #     #count += 1
+        #     f_tidy_ids = open('tidy_ids.json')            
+        #     for line_of_f_tidy_ids in f_tidy_ids:
+    
+        #         movie_of_ids = json.loads(line_of_f_tidy_ids) 
+        #         ids_in_tidy_ids = movie_of_ids['ids']
+        #         info_in_tidy_ids = movie_of_ids['info']                
+
+        #         if i in ids_in_tidy_ids and ids[i] == ids_in_tidy_ids[i]:
+        #             mawid = info_in_tidy_ids['mawid']
+
+
+        #         # #print i
+        #     f_tidy_ids.close()
             #print i  
 
         movie_dic = dict()
@@ -166,10 +176,17 @@ def get_tidy_tagdb(file_path):
         movie_dic['ids'] = ids
         movie_dic['language'] = language
         movie_dic['genres'] = genres
-        movie_dic['mawid'] = mawid
-        
+
+        if mawid:
+            movie_dic['mawid'] = mawid
+        else:
+            continue
+
         movie_json = json.dumps(movie_dic)
+        print 0
+        
         f_tidy_tagdb.write(movie_json + '\n')
+        #break
 
     f_tidy_tagdb.close()
 
