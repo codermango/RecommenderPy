@@ -197,8 +197,83 @@ def get_tidy_tagdb(file_path):
     f_tidy_tagdb.close()
         
   
-        
+def neaten_movie_genres(file_path):
+    f_tidy_tagdb = open(file_path)
+    f_tagdb_after_neaten_genres = open('tagdb_after_neaten_genres.json', 'w')
+    for line in f_tidy_tagdb:
+        movie = json.loads(line)
+    
+        genres = movie['genres']
 
+        if 'TV Movie' in genres:
+            continue
+
+        new_genres = []
+        for genre in genres:
+            if '&' in genre:
+                tmp = genre.split(' & ')
+                new_genres += tmp
+            elif 'Science Fiction' == genre:
+                new_genres.append('Sci-Fi')
+            elif 'Sports Film' == genre:
+                new_genres.append('Sport')
+            elif 'Road Movie' == genre:
+                new_genres.append('Road')
+            elif 'Fan Film' == genre:
+                new_genres.append('Fan')
+            elif 'Film Noir' == genre:
+                new_genres.append('Noir')
+            else:
+                new_genres.append(genre)
+
+        movie['genres'] = new_genres
+        
+        movie_json = json.dumps(movie)
+        f_tagdb_after_neaten_genres.write(movie_json + '\n')
+
+    f_tagdb_after_neaten_genres.close()
+
+
+
+def get_all_genres(file_path):
+    f_tagdb_after_neaten_genres = open(file_path)
+
+    genres_list = []
+    for line in f_tagdb_after_neaten_genres:
+        movie = json.loads(line)
+        genres = movie['genres']
+
+        tmp_list = list(set(genres).difference(genres_list))
+        genres_list += tmp_list
+        
+        
+    print len(genres_list)
+    print genres_list
+
+    f_genre_list = open('genre_list.txt', 'w')
+    for i in genres_list:
+        f_genre_list.write(i + '\n')
+
+    return genres_list
+
+
+def get_all_actors(file_path):
+    f_tagdb_after_neaten_genres = open(file_path)
+
+    mawid_list = []
+    for line in f_tagdb_after_neaten_genres:
+        movie = json.loads(line)
+        mawid = movie['mawid']
+
+        tmp_list = list(set(mawid).difference(mawid_list))
+        mawid_list += tmp_list
+
+    return mawid_list
+   
+
+
+    
+    
 
 #######################################################################
 
@@ -209,12 +284,14 @@ def get_tidy_tagdb(file_path):
 
 #generate_imdb_json_from_tidy_tagdb_tmp('tidy_ids.json')
 
-get_tidy_tagdb('tidy_tagdb_tmp.json')
+#get_tidy_tagdb('tidy_tagdb_tmp.json')
+
+#neaten_movie_genres('tidy_tagdb.json')
+
+#get_all_genres('tagdb_after_neaten_genres.json')
 
 
 
-
-#check_empty_of_ids('tidy_ids.json', 'free')
 
 
 
