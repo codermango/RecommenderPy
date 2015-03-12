@@ -314,7 +314,7 @@ def generate_genre_vector_json_file(file_path, sorted_genre_list):
 
 #get_tidy_tagdb('tidy_tagdb_tmp.json')
 
-#neaten_movie_genres('tidy_tagdb.json')
+neaten_movie_genres('tidy_tagdb.json')
 
 sorted_genre_list = get_all_genres('tagdb_after_neaten_genres.json')
 

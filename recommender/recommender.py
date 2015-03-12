@@ -14,8 +14,16 @@ def get_sum_of_all_genre_in_liked_movies(list_user_liked_movie_id, file_movie_ge
     file_movie_genre_vector = open(file_movie_genre_vector)
     dic_id_with_genre = json.loads(file_movie_genre_vector.readline())
 
+    count = 0
     for id in list_user_liked_movie_id:
-        list_genre_vector = dic_id_with_genre[id]
+    	try:
+        	list_genre_vector = dic_id_with_genre[id]
+        except KeyError:
+        	continue
+        # 获取list_genre_vector中1的个数，即为此id的genre数
+        count += list_genre_vector.count(1)
+    print count
+     
 
 
 
