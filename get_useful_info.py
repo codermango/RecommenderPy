@@ -279,6 +279,8 @@ def generate_genre_vector_json_file(file_path, sorted_genre_list):
 
     f_tagdb_after_neaten_genres = open('tagdb_after_neaten_genres.json')
     f_movie_genre_vector = open('movie_genre_vector.json', 'w')
+
+    new_movie_dic = dict()
     for line in f_tagdb_after_neaten_genres:
         
         movie_genre_vector = [0 for x in range(0, len(sorted_genre_list))]
@@ -289,14 +291,12 @@ def generate_genre_vector_json_file(file_path, sorted_genre_list):
 
         for k in genres:
             movie_genre_vector[genre_dic[k]] = 1
-
-
-        new_movie_dic = dict()
+     
         new_movie_dic[imdb_id] = movie_genre_vector
 
-        new_movie_json = json.dumps(new_movie_dic)
+    new_movie_json = json.dumps(new_movie_dic)
 
-        f_movie_genre_vector.write(new_movie_json + '\n')
+    f_movie_genre_vector.write(new_movie_json + '\n')
 
     f_tagdb_after_neaten_genres.close()
     f_movie_genre_vector.close()
@@ -316,9 +316,9 @@ def generate_genre_vector_json_file(file_path, sorted_genre_list):
 
 #neaten_movie_genres('tidy_tagdb.json')
 
-# sorted_genre_list = get_all_genres('tagdb_after_neaten_genres.json')
+sorted_genre_list = get_all_genres('tagdb_after_neaten_genres.json')
 
-# generate_genre_vector_json_file('genre_vector.json', sorted_genre_list)
+generate_genre_vector_json_file('genre_vector.json', sorted_genre_list)
 
 
 
