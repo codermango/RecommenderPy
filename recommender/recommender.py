@@ -35,7 +35,6 @@ def generate_user_preference_vector(list_user_liked_movie_id, dic_id_with_genre)
 
 
 
-
 def generate_tfidf_vector(user_preference_vector, dic_id_with_genre):
     list_of_all_movie_genre = dic_id_with_genre.values()
     sum_of_every_genre_vector = reduce(lambda x, y: [m + n for m, n in zip(x, y)], list_of_all_movie_genre)
@@ -95,7 +94,7 @@ def recommend(user_preference_vector, num_of_recommended_movies, dic_id_with_gen
 
 #####################################################################################################
 
-file_my_liked_movie_list = open("myfavorite_chang.txt")
+file_my_liked_movie_list = open("my_liked_movie_list.txt")
 list_user_liked_movie_id = []
 for line_of_my_liked_movie_list in file_my_liked_movie_list:
     list_user_liked_movie_id.append(line_of_my_liked_movie_list.strip())
