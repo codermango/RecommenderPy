@@ -85,8 +85,10 @@ def generate_mawid_vector_json_file(saved_file, sorted_mawid_list):
     movie_mawid_vector_file = open(saved_file, 'w')
 
     new_movie_dic = dict()
-    for line in tagdb_after_neaten_genres:
+    for line in tagdb_after_neaten_genres_file:
         movie_mawid_vector = [0 for x in range(0, len(sorted_mawid_list))]
+
+        print len(movie_mawid_vector)
 
         movie = json.loads(line)
         mawid = movie['mawid']
@@ -104,13 +106,38 @@ def generate_mawid_vector_json_file(saved_file, sorted_mawid_list):
     tagdb_after_neaten_genres_file.close()
     movie_mawid_vector_file.close()
 
+
+
+
+def generate_id_with_mawid_file(id_with_mawid_file):
+    tagdb_after_neaten_genres_file = open('tagdb_after_neaten_genres.json')
+    id_with_mawid_file = open(id_with_mawid_file, 'w')
+
+    new_movie_dic = dict()
+    for line in tagdb_after_neaten_genres_file:
+        movie = json.loads(line)
+        imdb_id = movie['ids']['imdbId']
+        mawid = movie['mawid']
+
+        new_movie_dic[imdb_id] = mawid
+
+    movie_json = json.dumps(new_movie_dic)
+    id_with_mawid_file.write(movie_json + '\n')
+
+    tagdb_after_neaten_genres_file.close()
+    id_with_mawid_file.close()
+    
+
+
+
 ##########################################################################
 
 #delete_empty_credits_and_crew('1_after_delete_empty_credits_and_crew_file.json')
 
 # get_id_with_crew('2_id_with_crew_file.json')
 
-sorted_mawid_list = get_all_mawid('mawid_list.txt')
+# sorted_mawid_list = get_all_mawid('mawid_list.txt')
 
-generate_mawid_vector_json_file('movie_mawid_vector.json', sorted_mawid_list)
+# generate_mawid_vector_json_file('movie_mawid_vector.json', sorted_mawid_list)
 
+generate_id_with_mawid_file('movie_id_with_mawid.json')
