@@ -6,8 +6,6 @@ import math
 ####################################################################################################
 
 
-
-
      
 def get_sum_of_all_genre_in_all_movies(dic_id_with_genre):
     num_of_genre = 0

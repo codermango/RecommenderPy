@@ -34,13 +34,31 @@ def get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid):
     return result
 
 
+def get_sum_of_every_mawid_dic(dic_id_with_mawid):   # 太耗时！！！！！！！！！！
+    mawid_list = []
+    dic_id_with_mawid_values = dic_id_with_mawid.values()
+    mawid_list = reduce(lambda x, y: x + y, dic_id_with_mawid_values)
+    mawid_list = set(mawid_list)
+
+    mawid_with_count_dic = {}
+    num = 0
+    for item in mawid_list:
+        num += reduce(lambda x, y: x.count(item) + y.count(item), dic_id_with_mawid_values)
+        print num, 'bbb'
+        break
+
+    print len(mawid_list), 'aaaaa'
+
+
 def get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_movies):
-    mawid_preference_dic = {}
+
     # 首先把两个列表的元素组合在一起
     values_of_user_mawid_preference_dic = user_mawid_preference_dic.values()
     difference_list = list(set(mawid_list).difference(set(values_of_user_mawid_preference_dic)))
 
     map(lambda x: user_mawid_preference_dic.setdefault(x, 0), difference_list)
+
+    sum_of_every_mawid_dic = {}
 
     # 然后算出tf-idf
     sum_of_user_liked_mawid = sum(user_mawid_preference_dic.values())
@@ -52,7 +70,7 @@ def get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_m
     print tf_dic
 
     idf_dic = {}
-    for i, j in 
+    
     #最后算出cos相似度
 
   
@@ -88,6 +106,18 @@ user_mawid_preference_dic = generate_user_mawid_preference_dic(user_liked_movie_
 
 # 此值在外部算好，避免进入循环增大计算量
 sum_of_all_mawid_in_all_movies = get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid)
-
+sum_of_every_mawid_dic = get_sum_of_every_mawid_dic(dic_id_with_mawid)
 
 recommended_movie_id = recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_mawid, sum_of_all_mawid_in_all_movies)
+
+
+
+
+
+
+
+
+
+
+
+
