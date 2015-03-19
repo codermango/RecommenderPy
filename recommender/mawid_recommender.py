@@ -136,7 +136,7 @@ def recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_
     user_mawid_preference_dic_keys = user_mawid_preference_dic.keys()
 
     
-    cos_value_dic = {}
+    cos_sim_dic = {}
     for k, v in dic_id_with_mawid.items():
 
         count += 1
@@ -148,14 +148,21 @@ def recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_
 
         cos_sim = get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
 
-        cos_value_dic[k] = cos_sim
-        print cos_sim, intersection_list, 'dd'
+        cos_sim_dic[k] = cos_sim
+        #print cos_sim, intersection_list, 'dd'
 
-    print len(cos_value_dic)
+    cos_value_sorted_tuple_list = sorted(cos_sim_dic.items(), lambda x, y: cmp(x[1], y[1]), reverse=True)
+    recommended_cos_value = [cos_value_sorted_tuple_list[x] for x in range(0, num_of_recommended_movies)]
+    print recommended_cos_value
+
+    recommended_movie_id_list = [recommended_cos_value[x][0] for x in range(0, len(recommended_cos_value))]
+    print recommended_movie_id_list
+    return recommended_movie_id_list
+
 
 ###################################################################################################
 
-my_liked_movie_list_file = open("myfavorite_chang.txt")
+my_liked_movie_list_file = open("mark_liked_movie_id.txt")
 user_liked_movie_id_list = []
 for line in my_liked_movie_list_file:
     user_liked_movie_id_list.append(line.strip())
