@@ -16,12 +16,11 @@ def generate_user_mawid_preference_dic(user_liked_movie_id_list, dic_id_with_maw
         except KeyError:
             continue
 
-    user_mawid_set = set(user_mawid_list)
+    user_mawid_set_list = list(set(user_mawid_list))
 
-    for item in user_mawid_set:
+    for item in user_mawid_set_list:
         user_mawid_preference_dic[item] = user_mawid_list.count(item)
 
-    print user_mawid_preference_dic
     return user_mawid_preference_dic
 
 
@@ -57,7 +56,6 @@ def generate_sum_of_every_mawid_dic(dic_id_with_mawid):   # 太耗时！！！�
 
     mawid_with_count_file.close()
 
-    print len(mawid_with_count_dic)
 
 
 
@@ -65,28 +63,30 @@ def generate_sum_of_every_mawid_dic(dic_id_with_mawid):   # 太耗时！！！�
 def get_sum_of_every_mawid_dic(mawid_with_count_file):
     mawid_with_count_file = open(mawid_with_count_file)
     content = json.loads(mawid_with_count_file.readline())
-    print len(content), 'aaa'
-    print content['405166']
+
     return content
 
 
 def get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic):
 
-    values_of_user_mawid_preference_dic = user_mawid_preference_dic.values()
-
+    user_mawid_preference_dic_keys = user_mawid_preference_dic.keys()
     # 首先把两个列表的元素组合在一起
-    difference_list = list(set(mawid_list).difference(set(values_of_user_mawid_preference_dic)))
+    difference_list = list(set(mawid_list).difference(set(user_mawid_preference_dic_keys)))
+    # print 'difference_list:', difference_list
 
-    map(lambda x: user_mawid_preference_dic.update({x: 0}), difference_list)
+    user_mawid_preference_dic_tmp = {}
+    user_mawid_preference_dic_tmp.update(user_mawid_preference_dic)
+    map(lambda x: user_mawid_preference_dic_tmp.update({x: 0}), difference_list)
+    # print user_mawid_preference_dic_tmp
     
     mawid_list_dic = {}
-    map(lambda x: mawid_list_dic.update({x: 0}), user_mawid_preference_dic.keys())
+    map(lambda x: mawid_list_dic.update({x: 0}), user_mawid_preference_dic_tmp.keys())
 
     # print mawid_list_dic.values()
 
     map(lambda x: mawid_list_dic.update({x: 1}), mawid_list)
 
-    # print mawid_list_dic.values()
+    # print 'mawid_list_dic:', mawid_list_dic
 
 
 
@@ -94,13 +94,13 @@ def get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_m
     sum_of_user_liked_mawid = sum(user_mawid_preference_dic.values())
     # print sum_of_user_liked_mawid
     tf_dic = {}
-    for k, v in user_mawid_preference_dic.items():
+    for k, v in user_mawid_preference_dic_tmp.items():
         tf_dic[k] = v / sum_of_user_liked_mawid
 
     # print 'tf_idc:', tf_dic
 
     idf_dic = {}
-    for i, j in user_mawid_preference_dic.items():
+    for i, j in user_mawid_preference_dic_tmp.items():
         idf_dic[i] = sum_of_all_mawid_in_all_movies / sum_of_every_mawid_dic[i]
     # print 'idf_dic:', idf_dic
 
@@ -108,37 +108,48 @@ def get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_m
     for key in tf_dic.keys():
         tfidf_dic[key] = tf_dic[key] * idf_dic[key]
     # print 'tfidf_dic:', tfidf_dic
-
+    # print 'mawid_list_dic:', mawid_list_dic
     #最后算出cos相似度
+    
+    user_mawid_preference_dic_tmp_keys = user_mawid_preference_dic_tmp.keys()
     mawid_list_dic_value = mawid_list_dic.values()
     tfidf_dic_value = tfidf_dic.values()
 
-    num1 = sum([x * y for x, y in zip(mawid_list_dic_value, tfidf_dic_value)])
+    num1 = sum(map(lambda x: mawid_list_dic[x] * tfidf_dic[x], user_mawid_preference_dic_tmp_keys))
+    # print 'num1:', num1
     tmp1 = math.sqrt(sum([x ** 2 for x in mawid_list_dic_value]))
     tmp2 = math.sqrt(sum([x ** 2 for x in tfidf_dic_value]))
     num2 = tmp1 * tmp2  # num2=sqrt(a1^2+a2^2+a3^2) * sqrt(b1^2+b2^2+b3^2)
+    # print 'num2:', num2
     cos_value = num1 / num2
-    print cos_value
+
     return cos_value
 
 
 
 def recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_mawid, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic):
+    print 'user_mawid_preference_dic:', user_mawid_preference_dic
+    print 'user_mawid_preference_dic values:', user_mawid_preference_dic.values()
+    print 'length of user_mawid_preference_dic:', len(user_mawid_preference_dic)
 
-    values_of_user_mawid_preference_dic = user_mawid_preference_dic.values()
+    count = 0
+    user_mawid_preference_dic_keys = user_mawid_preference_dic.keys()
+
+    
     cos_value_dic = {}
     for k, v in dic_id_with_mawid.items():
-        mawid_list = v
-        intersection_list = list(set(mawid_list).intersection(set(values_of_user_mawid_preference_dic)))
 
-        if intersection_list:
-            print intersection_list
-            break
+        count += 1
+        mawid_list = v
+        intersection_list = list(set(mawid_list).intersection(set(user_mawid_preference_dic_keys)))
+
+        if not intersection_list:
+            continue
 
         cos_sim = get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
 
         cos_value_dic[k] = cos_sim
-        print cos_sim, 'dd'
+        print cos_sim, intersection_list, 'dd'
 
     print len(cos_value_dic)
 
