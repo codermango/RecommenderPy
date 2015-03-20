@@ -89,7 +89,7 @@ def recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies, u
 
 
 
-my_liked_movie_id_file = open("mark_liked_movie_id.txt")
+my_liked_movie_id_file = open("test_liked_movie_id.txt")
 # 把文件中的id放入list
 user_liked_movie_id_list = []
 for line_of_my_liked_movie_list in my_liked_movie_id_file:
