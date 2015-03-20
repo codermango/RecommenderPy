@@ -36,7 +36,10 @@ def generate_user_mawid_preference_dic(user_liked_movie_id_list, dic_id_with_maw
     user_mawid_set_list = list(set(user_mawid_list))
 
     for item in user_mawid_set_list:
-        user_mawid_preference_dic[item] = user_mawid_list.count(item)
+        mawid_count = user_mawid_list.count(item)
+        # 把数量为1的全部去除
+        if mawid_count > 1:
+            user_mawid_preference_dic[item] = user_mawid_list.count(item)
 
     return user_mawid_preference_dic
 
