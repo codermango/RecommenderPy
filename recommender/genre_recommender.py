@@ -12,24 +12,7 @@ def get_sum_of_all_genre_in_all_movies(dic_id_with_genre):
     values = dic_id_with_genre.values()
     num_list = map(lambda x: x.count(1), values)
     num_of_genre = sum(num_list)
-
     return num_of_genre
-
-
-# def generate_user_preference_vector(list_user_liked_movie_id, dic_id_with_genre):
-    
-#     list_of_liked_movie_genre_vector = []
-
-#     for id in list_user_liked_movie_id:
-#         try:
-#             list_of_liked_movie_genre_vector.append(dic_id_with_genre[id])
-#         except KeyError:
-#             continue
-
-#     user_preference_vector = reduce(lambda x, y: [m + n for m, n in zip(x, y)], list_of_liked_movie_genre_vector)
-#     print 'user_preference_vector: ', user_preference_vector
-
-#     return user_preference_vector
 
 
 
@@ -95,21 +78,4 @@ def recommend(user_preference_vector, dic_id_with_genre):
 
 #####################################################################################################
 
-# file_my_liked_movie_list = open("my_liked_movie_list.txt")
-# list_user_liked_movie_id = []
-# for line_of_my_liked_movie_list in file_my_liked_movie_list:
-#     list_user_liked_movie_id.append(line_of_my_liked_movie_list.strip())
-# print list_user_liked_movie_id
 
-
-# file_movie_genre_vector = open('movie_genre_vector.json')
-# dic_id_with_genre = json.loads(file_movie_genre_vector.readline())
-
-# num_of_recommended_movies = 20
-# user_preference_vector = generate_user_preference_vector(list_user_liked_movie_id, dic_id_with_genre)
-
-
-# # 推荐
-# recommended_movie_id = recommend(user_preference_vector, num_of_recommended_movies, dic_id_with_genre)
-
-#print recommended_movie_id

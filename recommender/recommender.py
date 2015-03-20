@@ -6,9 +6,7 @@ import mawid_recommender
 
 
 
-
-
-def generate_user_preference_vector(list_user_liked_movie_id, dic_id_with_genre):
+def generate_user_genre_preference_vector(list_user_liked_movie_id, dic_id_with_genre):
     
     list_of_liked_movie_genre_vector = []
 
@@ -19,7 +17,7 @@ def generate_user_preference_vector(list_user_liked_movie_id, dic_id_with_genre)
             continue
 
     user_preference_vector = reduce(lambda x, y: [m + n for m, n in zip(x, y)], list_of_liked_movie_genre_vector)
-    print 'user_preference_vector: ', user_preference_vector
+    # print 'user_preference_vector: ', user_preference_vector
 
     return user_preference_vector
 
@@ -47,7 +45,7 @@ def get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid):
 
     mawid_list = dic_id_with_mawid.values()
     result = sum(map(lambda x: len(x), mawid_list))
-    print 'sum_of_all_mawid_in_all_movies:',result
+    # print 'sum_of_all_mawid_in_all_movies:',result
     return result
 
 
@@ -58,44 +56,51 @@ def get_sum_of_every_mawid_dic(mawid_with_count_file):
     return content
 
 ###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+
+
+
+
+my_liked_movie_id_file = open("mark_liked_movie_id.txt")
+# 把文件中的id放入list
+user_liked_movie_id_list = []
+for line_of_my_liked_movie_list in my_liked_movie_id_file:
+    user_liked_movie_id_list.append(line_of_my_liked_movie_list.strip())
+print user_liked_movie_id_list
+
 
 ################################################################################
 # 为genre推荐的前期处理
-file_my_liked_movie_list = open("my_liked_movie_list.txt")
-list_user_liked_movie_id = []
-for line_of_my_liked_movie_list in file_my_liked_movie_list:
-    list_user_liked_movie_id.append(line_of_my_liked_movie_list.strip())
-print list_user_liked_movie_id
+movie_genre_vector_file = open('movie_genre_vector.json')
+id_with_genre_dic = json.loads(movie_genre_vector_file.readline())
+user_genre_preference_vector = generate_user_genre_preference_vector(user_liked_movie_id_list, id_with_genre_dic)
 
-
-file_movie_genre_vector = open('movie_genre_vector.json')
-dic_id_with_genre = json.loads(file_movie_genre_vector.readline())
-
-user_preference_vector = generate_user_preference_vector(list_user_liked_movie_id, dic_id_with_genre)
-
-genre_cos_sim_dic = genre_recommender.recommend(user_preference_vector, dic_id_with_genre)
 
 ##########################################################################################
 # 为mawid推荐的前期处理
-my_liked_movie_list_file = open("mark_liked_movie_id.txt")
-user_liked_movie_id_list = []
-for line in my_liked_movie_list_file:
-    user_liked_movie_id_list.append(line.strip())
-print 'user_liked_movie_id_list:', user_liked_movie_id_list
-
-
 movie_id_with_mawid_file = open('movie_id_with_mawid.json')
-dic_id_with_mawid = json.loads(movie_id_with_mawid_file.readline())
-
-
-user_mawid_preference_dic = generate_user_mawid_preference_dic(user_liked_movie_id_list, dic_id_with_mawid)
+id_with_mawid_dic = json.loads(movie_id_with_mawid_file.readline())
+user_mawid_preference_dic = generate_user_mawid_preference_dic(user_liked_movie_id_list, id_with_mawid_dic)
 
 # 此值在外部算好，避免进入循环增大计算量
-sum_of_all_mawid_in_all_movies = get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid)
-# generate_sum_of_every_mawid_dic(dic_id_with_mawid) 
+sum_of_all_mawid_in_all_movies = get_sum_of_all_mawid_in_all_movies(id_with_mawid_dic)
+# generate_sum_of_every_mawid_dic(id_with_mawid_dic)  此操作很费时，提前算好存入文件mawid_with_count.json
 sum_of_every_mawid_dic = get_sum_of_every_mawid_dic('mawid_with_count.json')
 
 
 
 
-mawid_cos_sim_dic = mawid_recommender.recommend(user_mawid_preference_dic, dic_id_with_mawid, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
+# 以下可分别得到根据genre和mawid推荐出的结果，均为（movied_id: cos_sim_value）这种的字典
+genre_cos_sim_dic = genre_recommender.recommend(user_genre_preference_vector, id_with_genre_dic)
+mawid_cos_sim_dic = mawid_recommender.recommend(user_mawid_preference_dic, id_with_mawid_dic, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
+
+
+print len(genre_cos_sim_dic)
+print len(mawid_cos_sim_dic)
+
+
+
+
