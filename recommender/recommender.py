@@ -3,6 +3,7 @@ import json
 import math
 import genre_recommender
 import mawid_recommender
+from collections import Counter
 
 
 
@@ -58,6 +59,21 @@ def get_sum_of_every_mawid_dic(mawid_with_count_file):
 
     return content
 
+
+
+def recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies):
+    final_cos_sim_dic = {}
+    genre_cos_sim_counter = Counter(genre_cos_sim_dic)
+    mawid_cos_sim_counter = Counter(mawid_cos_sim_dic)
+
+    final_cos_sim_counter = genre_cos_sim_counter + mawid_cos_sim_counter
+    recommended_movies = final_cos_sim_counter.most_common(num_of_recommended_movies)
+
+    print 'recommended movies:', recommended_movies
+    return recommended_movies
+
+
+
 ###########################################################################
 ###########################################################################
 ###########################################################################
@@ -100,9 +116,8 @@ sum_of_every_mawid_dic = get_sum_of_every_mawid_dic('mawid_with_count.json')
 genre_cos_sim_dic = genre_recommender.recommend(user_genre_preference_vector, id_with_genre_dic)
 mawid_cos_sim_dic = mawid_recommender.recommend(user_mawid_preference_dic, id_with_mawid_dic, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
 
-
-print len(genre_cos_sim_dic)
-print len(mawid_cos_sim_dic)
+num_of_recommended_movies = 20
+recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies)
 
 
 

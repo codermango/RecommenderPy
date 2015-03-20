@@ -65,7 +65,6 @@ def recommend(user_preference_vector, dic_id_with_genre):
     tfidf_vector = generate_tfidf_vector(user_preference_vector, dic_id_with_genre)
     
     cos_values_dict = get_cos_values_dict(dic_id_with_genre, tfidf_vector)
-    print cos_values_dict.items()[0]
 
     return cos_values_dict
 

@@ -116,8 +116,7 @@ def recommend(user_mawid_preference_dic, dic_id_with_mawid, sum_of_all_mawid_in_
         cos_sim_dic[k] = cos_sim
         #print cos_sim, intersection_list, 'dd'
 
-    cos_value_sorted_tuple_list = sorted(cos_sim_dic.items(), lambda x, y: cmp(x[1], y[1]), reverse=True)
-    return cos_value_sorted_tuple_list
+    return cos_sim_dic
 
     # recommended_cos_value = [cos_value_sorted_tuple_list[x] for x in range(0, num_of_recommended_movies)]
     # print recommended_cos_value
