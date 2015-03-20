@@ -61,16 +61,22 @@ def get_sum_of_every_mawid_dic(mawid_with_count_file):
 
 
 
-def recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies):
+def recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies, user_liked_movie_id_list):
     final_cos_sim_dic = {}
     genre_cos_sim_counter = Counter(genre_cos_sim_dic)
     mawid_cos_sim_counter = Counter(mawid_cos_sim_dic)
 
-    final_cos_sim_counter = genre_cos_sim_counter + mawid_cos_sim_counter
-    recommended_movies = final_cos_sim_counter.most_common(num_of_recommended_movies)
+    combined_cos_sim_counter = genre_cos_sim_counter + mawid_cos_sim_counter
+    
+    for key in user_liked_movie_id_list:
+        del combined_cos_sim_counter[key]
 
-    print 'recommended movies:', recommended_movies
-    return recommended_movies
+    final_recommended_movies = combined_cos_sim_counter.most_common(num_of_recommended_movies)
+
+    print 'final_recommended_movies:', final_recommended_movies
+    return final_recommended_movies
+
+    
 
 
 
@@ -117,7 +123,7 @@ genre_cos_sim_dic = genre_recommender.recommend(user_genre_preference_vector, id
 mawid_cos_sim_dic = mawid_recommender.recommend(user_mawid_preference_dic, id_with_mawid_dic, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
 
 num_of_recommended_movies = 20
-recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies)
+recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies, user_liked_movie_id_list)
 
 
 
