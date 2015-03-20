@@ -5,32 +5,32 @@ import math
 
 
 
-def generate_user_mawid_preference_dic(user_liked_movie_id_list, dic_id_with_mawid):
-    user_mawid_preference_dic = {}
+# def generate_user_mawid_preference_dic(user_liked_movie_id_list, dic_id_with_mawid):
+#     user_mawid_preference_dic = {}
 
-    user_mawid_list = []
+#     user_mawid_list = []
 
-    for movie_id in user_liked_movie_id_list:
-        try:
-            user_mawid_list += dic_id_with_mawid[movie_id]
-        except KeyError:
-            continue
+#     for movie_id in user_liked_movie_id_list:
+#         try:
+#             user_mawid_list += dic_id_with_mawid[movie_id]
+#         except KeyError:
+#             continue
 
-    user_mawid_set_list = list(set(user_mawid_list))
+#     user_mawid_set_list = list(set(user_mawid_list))
 
-    for item in user_mawid_set_list:
-        user_mawid_preference_dic[item] = user_mawid_list.count(item)
+#     for item in user_mawid_set_list:
+#         user_mawid_preference_dic[item] = user_mawid_list.count(item)
 
-    return user_mawid_preference_dic
+#     return user_mawid_preference_dic
 
 
 
-def get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid):
+# def get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid):
 
-    mawid_list = dic_id_with_mawid.values()
-    result = sum(map(lambda x: len(x), mawid_list))
-    print 'sum_of_all_mawid_in_all_movies:',result
-    return result
+#     mawid_list = dic_id_with_mawid.values()
+#     result = sum(map(lambda x: len(x), mawid_list))
+#     print 'sum_of_all_mawid_in_all_movies:',result
+#     return result
 
 
 def generate_sum_of_every_mawid_dic(dic_id_with_mawid):   # 太耗时！！！！！！！！！！
@@ -60,11 +60,11 @@ def generate_sum_of_every_mawid_dic(dic_id_with_mawid):   # 太耗时！！！�
 
 
 
-def get_sum_of_every_mawid_dic(mawid_with_count_file):
-    mawid_with_count_file = open(mawid_with_count_file)
-    content = json.loads(mawid_with_count_file.readline())
+# def get_sum_of_every_mawid_dic(mawid_with_count_file):
+#     mawid_with_count_file = open(mawid_with_count_file)
+#     content = json.loads(mawid_with_count_file.readline())
 
-    return content
+#     return content
 
 
 def get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic):
@@ -127,7 +127,7 @@ def get_cos_sim(user_mawid_preference_dic, mawid_list, sum_of_all_mawid_in_all_m
 
 
 
-def recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_mawid, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic):
+def recommend(user_mawid_preference_dic, dic_id_with_mawid, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic):
     print 'user_mawid_preference_dic:', user_mawid_preference_dic
     print 'user_mawid_preference_dic values:', user_mawid_preference_dic.values()
     print 'length of user_mawid_preference_dic:', len(user_mawid_preference_dic)
@@ -152,39 +152,41 @@ def recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_
         #print cos_sim, intersection_list, 'dd'
 
     cos_value_sorted_tuple_list = sorted(cos_sim_dic.items(), lambda x, y: cmp(x[1], y[1]), reverse=True)
-    recommended_cos_value = [cos_value_sorted_tuple_list[x] for x in range(0, num_of_recommended_movies)]
-    print recommended_cos_value
+    return cos_value_sorted_tuple_list
 
-    recommended_movie_id_list = [recommended_cos_value[x][0] for x in range(0, len(recommended_cos_value))]
-    print recommended_movie_id_list
-    return recommended_movie_id_list
+    # recommended_cos_value = [cos_value_sorted_tuple_list[x] for x in range(0, num_of_recommended_movies)]
+    # print recommended_cos_value
+
+    # recommended_movie_id_list = [recommended_cos_value[x][0] for x in range(0, len(recommended_cos_value))]
+    # print recommended_movie_id_list
+    # return recommended_movie_id_list
 
 
 ###################################################################################################
 
-my_liked_movie_list_file = open("mark_liked_movie_id.txt")
-user_liked_movie_id_list = []
-for line in my_liked_movie_list_file:
-    user_liked_movie_id_list.append(line.strip())
-print 'user_liked_movie_id_list:', user_liked_movie_id_list
+# my_liked_movie_list_file = open("mark_liked_movie_id.txt")
+# user_liked_movie_id_list = []
+# for line in my_liked_movie_list_file:
+#     user_liked_movie_id_list.append(line.strip())
+# print 'user_liked_movie_id_list:', user_liked_movie_id_list
 
 
-movie_id_with_mawid_file = open('movie_id_with_mawid.json')
-dic_id_with_mawid = json.loads(movie_id_with_mawid_file.readline())
+# movie_id_with_mawid_file = open('movie_id_with_mawid.json')
+# dic_id_with_mawid = json.loads(movie_id_with_mawid_file.readline())
 
 
-num_of_recommended_movies = 20
-user_mawid_preference_dic = generate_user_mawid_preference_dic(user_liked_movie_id_list, dic_id_with_mawid)
+# num_of_recommended_movies = 20
+# user_mawid_preference_dic = generate_user_mawid_preference_dic(user_liked_movie_id_list, dic_id_with_mawid)
 
-# 此值在外部算好，避免进入循环增大计算量
-sum_of_all_mawid_in_all_movies = get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid)
-# generate_sum_of_every_mawid_dic(dic_id_with_mawid) 
-sum_of_every_mawid_dic = get_sum_of_every_mawid_dic('mawid_with_count.json')
-
-
+# # 此值在外部算好，避免进入循环增大计算量
+# sum_of_all_mawid_in_all_movies = get_sum_of_all_mawid_in_all_movies(dic_id_with_mawid)
+# # generate_sum_of_every_mawid_dic(dic_id_with_mawid) 
+# sum_of_every_mawid_dic = get_sum_of_every_mawid_dic('mawid_with_count.json')
 
 
-recommended_movie_id = recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_mawid, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
+
+
+# recommended_movie_id = recommend(user_mawid_preference_dic, num_of_recommended_movies, dic_id_with_mawid, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
 
 
 
