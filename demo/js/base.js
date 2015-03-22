@@ -50,12 +50,14 @@ function handleDragLeave(e) {
 
 
 function loadImages() {
-	var list = document.querySelectorAll("#recommended-movies-list li");
-	console.log(list[1]);
-
-	for (var i = 0; i < list.length; i++) {
-		var imageNum = i + 1;
-		list[i].innerHTML = "<img src='images/" + imageNum +".jpg' >";
+	var ulElement = document.querySelector("#recommended-movies-list");
+	console.log(ulElement);
+	for (var i = 0; i < 10; i++) {
+		var liElement = document.createElement("li");
+		var imgElement = document.createElement("img");
+		imgElement.src = "images/" + i + ".jpg";
+		liElement.appendChild(imgElement);
+		ulElement.appendChild(liElement);
 	}
 }
 
