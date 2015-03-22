@@ -5,8 +5,6 @@ function startLoad() {
 	setDragTrueAndAddEvent();
 }
 
-
-
 // 以下为页面加载时，给相应标签加上drag属性和事件
 function setDragTrueAndAddEvent() {
 	
@@ -26,10 +24,14 @@ function setDragTrueAndAddEvent() {
 		likedMovieLiList[i].addEventListener("dragenter", function() {handleDragEnter(event);});
 		likedMovieLiList[i].addEventListener("dragleave", function() {handleDragLeave(event);});
 
+		likedMovieLiList[i].addEventListener("drop", function() {handleDrop(event);});
+		likedMovieLiList[i].addEventListener("dragover", function() {handleDragOver(event);}, false);
 	}
 }
 
-
+function handleDragOver(e) {
+	e.preventDefault();
+}
 
 function handleDragEnter(e) {
 	e.preventDefault();
@@ -39,16 +41,35 @@ function handleDragEnter(e) {
 
 
 function handleDragStart(e) {
-	
+	dragSource = e.target;
+	e.dataTransfer.setData("imgPath", e.target.src);
+	//console.log(e.target.src);
 }
-
 
 
 function handleDragLeave(e) {
+
 	e.target.classList.remove("over");
 }
 
+function handleDrop(e) {
+	e.preventDefault();
+	targetEle = e.target;
+	targetEle.classList.remove("over");
+	var childNodes = targetEle.childNodes;
+	console.log(childNodes.length);
 
+	if (childNodes.length == 0) {
+		var imgPath = e.dataTransfer.getData("imgPath");
+		targetEle.innerHTML = "<img src='" + imgPath + "' >";
+		console.log(targetEle.innerHTML);
+	}
+
+
+}
+
+
+// 网页初始的时候加载网页
 function loadImages() {
 	var ulElement = document.querySelector("#recommended-movies-list");
 	console.log(ulElement);
