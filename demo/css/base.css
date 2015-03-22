@@ -1,0 +1,77 @@
+body {
+	text-align: center;
+}
+
+#main {
+	margin-left: auto;
+	margin-right: auto;
+	width: 1200px;
+	min-height: 575px;
+	
+}
+
+#liked-movies {
+	position: relative;
+	height: 210px;
+	padding: 10px;
+	background-color: #222;
+	z-index: 999;
+	border-radius: 4px 4px 0 0;
+}
+
+.drop-buckets {
+	position: relative;
+	list-style: none;
+	width: 100%;
+}
+
+#liked-movies-list li{
+	position: relative;
+	float: left;
+	width: 112px;
+	height: 156px;
+	border: 3px dashed #222;
+	background-color: #444;
+	margin-left: 10px;
+	padding: 4px;
+}
+
+#liked-movies-list li.over {
+	background-color: white;
+}
+
+
+#recommended-movies {
+	min-height: 530px;
+	padding-top: 10px;
+	background-color: white;
+	border-radius: 4px;
+	box-shadow: inset 1px 1px 1px 1px #aaa;
+	overflow: hidden;
+}
+
+#recommended-movies-list {
+	margin: 0;
+	list-style: none;
+}
+
+#recommended-movies-list li {
+	position: relative;
+	float: left;
+	width: 108px;
+	height: 154px;
+	margin: 10px 16px;
+	background-color: white;
+	box-shadow: inset 0px 0px 1px 0px #aaa;
+}
+
+img {
+	width: 108px;
+	height: 154px;
+}
+
+
+
+
+
+
