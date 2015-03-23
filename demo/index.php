@@ -10,7 +10,7 @@
                 <ul id="liked-movies-list" class="drop-buckets">
                     <?php
                         $fileArr = array();
-                        $file = fopen("../recommender/mark_liked_movie_id.txt", "r");
+                        $file = fopen("../recommender/mark_liked_movie_id.txt", "r") or die("no such file!!");
                         while (!feof($file)) {
                             $id = fgets($file);
                             $fileArr[] = $id;
