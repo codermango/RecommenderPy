@@ -1,9 +1,11 @@
 <?php
     function getPicUrl($movieId) {
-        $url = "http://www.imdb.com/title/" + $movieId + "/";
-        echo $url;
-        //$page_content = file_get_contents($url);
-        //return $page_content;
+        $url = "http://www.imdb.com/title/".$movieId."/";
+        //$url = "http://www.baidu.com";
+        $page_content = file_get_contents($url) or die("no such url!!");
+        preg_match("/<img src=\"(.+?)\".*?>/", $page_content, $res) or die("no such matching!!");
+        echo $res[0]."aa";
+        return $page_content;
     }
     
     
@@ -28,7 +30,7 @@
                         fclose($file);
 
                         foreach ($fileArr as $id) {
-                            echo getPicUrl($id);
+                            getPicUrl(trim($id));
                             echo "<li>$id</li>";
                         }
                     ?>
