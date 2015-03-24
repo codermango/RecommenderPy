@@ -1,3 +1,13 @@
+<?php
+    function getPicUrl($movieId) {
+        $url = "http://www.imdb.com/title/" + $movieId + "/";
+        echo $url;
+        //$page_content = file_get_contents($url);
+        //return $page_content;
+    }
+    
+    
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,6 +28,7 @@
                         fclose($file);
 
                         foreach ($fileArr as $id) {
+                            echo getPicUrl($id);
                             echo "<li>$id</li>";
                         }
                     ?>
@@ -27,9 +38,17 @@
             <div id="recommended-movies">
                 <ul id="recommended-movies-list">
                     <?php
-                        //system("python ../recommender/recommender.py");
-                        $result = exec("python ../demo/test.py");
-                        echo "==". $result. "===";
+                        $recommendedMovies = exec("python ../recommender/recommender.py");
+                        $recommendedMoviesId_tmp = explode(",", $recommendedMovies);
+                        for ($i = 0; $i < count($recommendedMoviesId_tmp); $i++) {
+                            $startPos = strpos($recommendedMoviesId_tmp[$i], "'") + 1;
+                            $endPos = strrpos($recommendedMoviesId_tmp[$i], "'");
+                            $len = $endPos - $startPos;
+                            $recommendId = substr($recommendedMoviesId_tmp[$i], $startPos, $len);
+                            
+
+                            echo "<li>$recommendId</li>";
+                        }
                     ?>
                 </ul>
             </div>

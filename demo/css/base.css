@@ -55,7 +55,6 @@ body {
 #recommended-movies-list {
 	margin: 0;
 	list-style: none;
-	cursor: move;
 }
 
 #recommended-movies-list li {

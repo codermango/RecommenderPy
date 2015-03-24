@@ -27,7 +27,11 @@
     <body>
         <div id="div1" onclick="myClick()">
             <div id="div2">
-                
+                <?php
+                    echo "string";
+                    system("python ../recommender/recommender.py");
+                    system("dir");
+                ?>
             </div>
         </div>
         

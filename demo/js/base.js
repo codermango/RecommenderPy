@@ -1,8 +1,8 @@
 
 
 function startLoad() {
-	loadImages();
-	setDragTrueAndAddEvent();
+	//loadImages();
+	//setDragTrueAndAddEvent();
 }
 
 // 以下为页面加载时，给相应标签加上drag属性和事件
@@ -28,7 +28,7 @@ function setDragTrueAndAddEvent() {
 		likedMovieLiList[i].addEventListener("drop", function() {handleDrop(event);}, false);
         likedMovieLiList[i].addEventListener("dragend", function() {handleDragEnd(event);}, false);
 		
-        console.log(likedMovieLiList[i].innerHTML + 'aaa');
+        
 	}
 }
 

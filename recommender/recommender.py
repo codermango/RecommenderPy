@@ -73,7 +73,7 @@ def recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies, u
 
     final_recommended_movies = combined_cos_sim_counter.most_common(num_of_recommended_movies)
 
-    print 'final_recommended_movies:', final_recommended_movies
+    #print 'final_recommended_movies:', final_recommended_movies
     return final_recommended_movies
 
     
@@ -89,7 +89,7 @@ def recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies, u
 
 
 
-my_liked_movie_id_file = open("test_liked_movie_id.txt")
+my_liked_movie_id_file = open("C:/wamp/www/RecommenderPy/recommender/my_liked_movie_list.txt")
 # 把文件中的id放入list
 user_liked_movie_id_list = []
 for line_of_my_liked_movie_list in my_liked_movie_id_file:
@@ -99,21 +99,21 @@ print user_liked_movie_id_list
 
 ################################################################################
 # 为genre推荐的前期处理
-movie_genre_vector_file = open('movie_genre_vector.json')
+movie_genre_vector_file = open('C:/wamp/www/RecommenderPy/recommender/movie_genre_vector.json')
 id_with_genre_dic = json.loads(movie_genre_vector_file.readline())
 user_genre_preference_vector = generate_user_genre_preference_vector(user_liked_movie_id_list, id_with_genre_dic)
 
 
 ##########################################################################################
 # 为mawid推荐的前期处理
-movie_id_with_mawid_file = open('movie_id_with_mawid.json')
+movie_id_with_mawid_file = open('C:/wamp/www/RecommenderPy/recommender/movie_id_with_mawid.json')
 id_with_mawid_dic = json.loads(movie_id_with_mawid_file.readline())
 user_mawid_preference_dic = generate_user_mawid_preference_dic(user_liked_movie_id_list, id_with_mawid_dic)
 
 # 此值在外部算好，避免进入循环增大计算量
 sum_of_all_mawid_in_all_movies = get_sum_of_all_mawid_in_all_movies(id_with_mawid_dic)
 # generate_sum_of_every_mawid_dic(id_with_mawid_dic)  此操作很费时，提前算好存入文件mawid_with_count.json
-sum_of_every_mawid_dic = get_sum_of_every_mawid_dic('mawid_with_count.json')
+sum_of_every_mawid_dic = get_sum_of_every_mawid_dic('C:/wamp/www/RecommenderPy/recommender/mawid_with_count.json')
 
 
 
@@ -123,8 +123,9 @@ genre_cos_sim_dic = genre_recommender.recommend(user_genre_preference_vector, id
 mawid_cos_sim_dic = mawid_recommender.recommend(user_mawid_preference_dic, id_with_mawid_dic, sum_of_all_mawid_in_all_movies, sum_of_every_mawid_dic)
 
 num_of_recommended_movies = 20
-recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies, user_liked_movie_id_list)
+id_list = recommend(genre_cos_sim_dic, mawid_cos_sim_dic, num_of_recommended_movies, user_liked_movie_id_list)
 
+print dict(id_list).keys()
 
 
 
